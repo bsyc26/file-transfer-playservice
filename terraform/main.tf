@@ -19,11 +19,13 @@ terraform {
 
 # The provider of your cloud service, in this case it is AWS.
 provider "aws" {
-  region = "us-west-2" # Which region you are working on
+  region              = "us-west-2" # Which region you are working on
+  allowed_account_ids = var.allowed_account_ids
 }
 
 # Existing bucket the server fetches requested files from. LabRole cannot manage buckets, so
 # Terraform only looks it up; files live under var.files_prefix.
 data "aws_s3_bucket" "files" {
-  bucket = var.files_bucket
+  bucket     = var.files_bucket
+  depends_on = [aws_s3_bucket.experiment]
 }

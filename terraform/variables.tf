@@ -4,6 +4,24 @@ variable "image_tag" {
   default     = "latest"
 }
 
+variable "create_task_roles" {
+  type        = bool
+  default     = false
+  description = "Create experiment-specific ECS roles in a personal account; otherwise reuse Learner Lab's LabRole."
+}
+
+variable "create_files_bucket" {
+  type        = bool
+  default     = false
+  description = "Create a dedicated disposable fixture bucket; its objects are deleted during teardown."
+}
+
+variable "allowed_account_ids" {
+  type        = list(string)
+  default     = []
+  description = "Optional account guard to prevent deployment with the wrong AWS profile."
+}
+
 variable "files_bucket" {
   type        = string
   description = "Existing S3 bucket the backend reads files from (LabRole cannot create buckets)"

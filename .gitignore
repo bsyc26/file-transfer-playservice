@@ -37,6 +37,9 @@ terraform/.terraform/
 *.tfstate
 *.tfstate.*
 *.tfvars
+*.auto.tfvars.json
+*.tfplan
+.env.*
 
 # PEM files
 *.pem

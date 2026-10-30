@@ -1,6 +1,7 @@
 # AWS Academy / Learner Lab accounts cannot create IAM roles, so the tasks reuse LabRole.
 data "aws_iam_role" "lab" {
-  name = "LabRole"
+  count = var.create_task_roles ? 0 : 1
+  name  = "LabRole"
 }
 
 resource "aws_ecs_cluster" "main" {
@@ -18,13 +19,14 @@ resource "aws_cloudwatch_log_group" "backend" {
 }
 
 resource "aws_ecs_task_definition" "backend" {
+  depends_on               = [aws_iam_role_policy_attachment.execution, aws_iam_role_policy.backend_read]
   family                   = "file-transfer-backend"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 256
   memory                   = 512
-  execution_role_arn       = data.aws_iam_role.lab.arn
-  task_role_arn            = data.aws_iam_role.lab.arn
+  execution_role_arn       = local.execution_role_arn
+  task_role_arn            = local.backend_role_arn
 
   runtime_platform {
     operating_system_family = "LINUX"
@@ -63,13 +65,14 @@ resource "aws_ecs_task_definition" "backend" {
 }
 
 resource "aws_ecs_task_definition" "gateway" {
+  depends_on               = [aws_iam_role_policy_attachment.execution]
   family                   = "file-transfer-gateway"
   requires_compatibilities = ["FARGATE"]
   network_mode             = "awsvpc"
   cpu                      = 256
   memory                   = 512
-  execution_role_arn       = data.aws_iam_role.lab.arn
-  task_role_arn            = data.aws_iam_role.lab.arn
+  execution_role_arn       = local.execution_role_arn
+  task_role_arn            = var.create_task_roles ? null : data.aws_iam_role.lab[0].arn
 
   runtime_platform {
     operating_system_family = "LINUX"

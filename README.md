@@ -1,6 +1,8 @@
 File Transfer Service
 ===========
 
+For the midterm experiment deployment, see [personal-account configuration and changes](MIDTERM-CHANGES.md). The [experiment presentation, scripts and AWS evidence](https://github.com/bsyc26/cs6650/tree/main/midterm-mastery/part2) are maintained separately in the course repository.
+
 ## Architecture
 
 The file transfer service consists of two parts: a gateway and a backend.
